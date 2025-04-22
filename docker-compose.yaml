@@ -113,18 +113,15 @@ services:
         clickhouse:
             condition: service_healthy
 
-  # loadgenerator:
-  #   image: locustio/locust
-  #   container_name: load-generator
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         memory: 120M
-  #   volumes:
-  #     - ./:/mnt/locust
-  #   restart: unless-stopped
-  #   ports:
-  #     - 8089:8089
-  #   command: --loglevel DEBUG -f /mnt/locust/locustfile.py --host https://nginx.f5kc.com
+    api_discovery_export:
+    build:
+      context: ./services/api_discovery_export
+    ports:
+      - "8000:8000"
+    depends_on:
+      - clickhouse
+    environment:
+      CLICKHOUSE_HOST: clickhouse
+
 networks:
   api_discovery_tool:
